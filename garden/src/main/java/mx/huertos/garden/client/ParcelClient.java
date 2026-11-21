@@ -29,6 +29,10 @@ public class ParcelClient {
                     .onStatus(s -> s.value() == 404, (req, res) -> {
                         throw new ParcelNotFoundException(id);
                     })
+                    .onStatus(s -> s.value() == 401 || s.value() == 403, (req, res) -> {
+                        throw new ParcelServiceUnavailableException(
+                                "rechazó la autenticación (" + res.getStatusCode().value() + ")");
+                    })
                     .onStatus(HttpStatusCode::is5xxServerError, (req, res) -> {
                         throw new ParcelServiceUnavailableException(
                                 "respondió con error " + res.getStatusCode().value());
@@ -44,6 +48,10 @@ public class ParcelClient {
             return restClient.get()
                     .uri("/api/v1/parcels")
                     .retrieve()
+                    .onStatus(s -> s.value() == 401 || s.value() == 403, (req, res) -> {
+                        throw new ParcelServiceUnavailableException(
+                                "rechazó la autenticación (" + res.getStatusCode().value() + ")");
+                    })
                     .onStatus(HttpStatusCode::is5xxServerError, (req, res) -> {
                         throw new ParcelServiceUnavailableException(
                                 "respondió con error " + res.getStatusCode().value());
