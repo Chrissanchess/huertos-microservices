@@ -7,6 +7,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestClient;
 
+import mx.huertos.garden.client.BearerTokenPropagationInterceptor;
+
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
@@ -47,6 +49,10 @@ public class RestClientConfig {
         };
         factory.setConnectTimeout(connectTimeout);
         factory.setReadTimeout(readTimeout);
-        return RestClient.builder().baseUrl(baseUrl).requestFactory(factory).build();
+        return RestClient.builder()
+        .baseUrl(baseUrl)
+        .requestFactory(factory)
+        .requestInterceptor(new BearerTokenPropagationInterceptor())
+        .build();
     }
 }
