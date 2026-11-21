@@ -35,3 +35,18 @@ Para ejecutar el servicio `parcel`, necesitas configurar las siguientes variable
 - `GET /api/v1/garden/parcels` : Listar todas las parcelas con recomendaciones agrícolas.
 - `GET /api/v1/garden/parcels?soilType={tipo}` : Filtrar parcelas por tipo de suelo (ARCILLOSO, LIMOSO, ARENOSO).
 - `GET /api/v1/garden/parcels/{id}/overview` : Obtener parcela específica con recomendaciones.
+
+## Autenticación (JWT)
+
+Los endpoints de Parcel y Garden exigen `Authorization: Bearer <accessToken>`.
+
+Variables de entorno nuevas:
+- `JWT_SECRET`: mínimo 32 caracteres, idéntico en Parcel y Garden.
+- `JWT_ACCESS_TOKEN_MINUTES` (opcional): vigencia del token de acceso, 15 por defecto.
+
+Endpoints públicos (Parcel):
+- `POST /api/v1/auth/login`: devuelve accessToken (15 min) y refreshToken (7 días).
+- `POST /api/v1/auth/refresh`: renueva el par de tokens con un refreshToken.
+
+Roles: `ADMIN` crea parcelas (POST); `ADMIN` y `USER` pueden consultar (GET).
+Los usuarios demo están en `docs/schema.sql`.
