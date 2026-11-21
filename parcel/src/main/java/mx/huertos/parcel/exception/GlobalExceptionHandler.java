@@ -8,6 +8,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -66,6 +67,13 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_ERROR",
                 "Ocurrió un error interno. Intenta de nuevo más tarde", req, List.of());
     }
+
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+public ResponseEntity<ApiError> handleMediaType(HttpMediaTypeNotSupportedException ex,
+                                                HttpServletRequest req) {
+    return build(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "UNSUPPORTED_MEDIA_TYPE",
+            "El Content-Type debe ser application/json", req, List.of());
+}
 
     private ResponseEntity<ApiError> build(HttpStatus status, String code, String message,
                                            HttpServletRequest req, List<ApiError.FieldDetail> details) {
